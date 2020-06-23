@@ -22,6 +22,22 @@ cap = cv.VideoCapture(0)
 i = 0
 a = []
 y = 0
+    # font 
+font = cv.FONT_HERSHEY_SIMPLEX 
+  
+# org 
+org1 = (20, 20) 
+org2 = (20,50)
+  
+# fontScale 
+fontScale = 0.5
+   
+# Blue color in BGR 
+color = (255, 0, 0) 
+  
+# Line thickness of 2 px 
+thickness = 2
+score = [[0, 0]]
 model = tf.keras.models.load_model("./Conv1d_Result/Conv1d_handwave_angle.h5")
 while(True):
     time_elapsed = time.time() - prev
@@ -78,13 +94,17 @@ while(True):
             X_angle.append(AngleA)
             X_angle = np.array(X_angle)
             score = model.predict(X_angle)
-            print(score)
+            # print(score)
             # print("kuy")
             a = a[-1]
             a = a.reshape(1,17,3)
             a = list(a)
             i = 0
-    cv.imshow('10frame',frame_draw)
+        frame_draw = cv.putText(frame_draw, "hand_wave :"+str(score[0][0]*100) + "%", org1, font,  
+                   fontScale, color, thickness, cv.LINE_AA)
+        frame_draw = cv.putText(frame_draw,"not_hand_wave :"+str(score[0][1]*100)+ "%", org2, font,  
+                   fontScale, color, thickness, cv.LINE_AA)
+        cv.imshow('10frame',frame_draw)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
