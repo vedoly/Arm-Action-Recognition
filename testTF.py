@@ -49,7 +49,7 @@ def keypoint_detect(img_ori):
   img_ori = cv.resize(img_ori, (257,257))
   img_ori = img_ori.reshape(1,257,257,3)
   # img = tf.reshape(tf.image.resize(img, [257,257]), [1,257,257,3])
-  model = tf.lite.Interpreter('posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite')
+  model = tf.lite.Interpreter('tracking_model.tflite')
   model.allocate_tensors()
   input_details = model.get_input_details()
   output_details = model.get_output_details()
