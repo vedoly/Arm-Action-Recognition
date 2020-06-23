@@ -21,6 +21,7 @@ cap = cv.VideoCapture(0)
 # print("fps:", fps)
 i = 0
 a = []
+y = 0
 while(True):
     time_elapsed = time.time() - prev
     res, frame = cap.read()
@@ -38,7 +39,7 @@ while(True):
         cv.imshow('10frame',frame_draw)
         # if (template_kps[5:11,2] == np.ones(6)).all:
         try:
-            if template_kps[5:11,2].all:
+            if template_kps[5:11,2].sum() == 6:
                 a.append(template_kps)
                 i = i+1
                 # print("kuy")
@@ -53,9 +54,11 @@ while(True):
             print("Notfound Arm")
         # if (template_kps[5:11,2] != np.ones(6)).all:
             # a
+        y = y+20
         if i == 50:
             np.save("data.npy",a)
             a = a[-1]
+            a = list(a)
             i = 0
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
