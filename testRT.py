@@ -37,7 +37,7 @@ while(True):
         template_kps = keypoint_detect(frame)
         frame_draw = draw_kps(frame,template_kps)
         # print(template_kps)
-        cv.imshow('10frame',frame_draw)
+        
         # if (template_kps[5:11,2] == np.ones(6)).all:
         try:
             if template_kps[5:11,2].sum() == 6:
@@ -59,7 +59,6 @@ while(True):
         print(i)
         if i == 50:
             np.save("data.npy",a)
-            i = 0
             j = []
             for h in a:
                 m = []
@@ -80,9 +79,12 @@ while(True):
             X_angle = np.array(X_angle)
             score = model.predict(X_angle)
             print(score)
-            print("kuy")
+            # print("kuy")
             a = a[-1]
+            a = a.reshape(1,17,3)
             a = list(a)
+            i = 0
+    cv.imshow('10frame',frame_draw)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
