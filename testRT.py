@@ -19,7 +19,7 @@ cap = cv.VideoCapture(0)
 # cap.set(cv.CAP_PROP_FPS, 10)
 # fps = int(cap.get(5))
 # print("fps:", fps)
-i = 0
+# i = 0
 a = []
 y = 0
     # font 
@@ -56,15 +56,20 @@ while(True):
         
         # if (template_kps[5:11,2] == np.ones(6)).all:
         try:
+            
+            for j,k in enumerate(template_kps[5:11]):
+                    if k[2] != 1:
+                        template_kps[5:11][j] = a[-1][5:11][j]
             if template_kps[5:11,2].sum() == 6:
                 a.append(template_kps)
                 
                 # print("kuy")
-            for j,k in enumerate(template_kps[5:11]):
-                    if k[2] != 1:
-                        template_kps[j] = a[-1][j]
-            i = i+1
+            # for j,k in enumerate(template_kps[5:11]):
+            #         if k[2] != 1:
+            #             template_kps[j] = a[-1][j]
+            # i = i+1
             print("Found")
+            print(np.array(a).shape)
                 # a.append(template_kps)
         except:
             # template_kps = keypoint_detect(frame)
@@ -72,21 +77,21 @@ while(True):
             print("Notfound Arm")
         # if (template_kps[5:11,2] != np.ones(6)).all:
             # a
-        print(i)
-        if i == 50:
+        # print(i)
+        if len(a)==50:
             np.save("data.npy",a)
-            j = []
+            decoy = []
             for h in a:
                 m = []
                 for l in h[5:11]:
                     m.append(l[:2])
-                j.append(m)
-            j = np.array(j)
+                decoy.append(m)
+            decoy = np.array(decoy)
             X_angle = []
             Y_angle = []
             AngleA = np.zeros((50,4))
-            for i in range(len(j)):
-                c = j[i]
+            for i in range(len(decoy)):
+                c = decoy[i]
                 AngleA[i][0] = (findAngleR(c[3],c[4],c[5]))
                 AngleA[i][1] = (findAngleR(c[4],c[3],c[0]))
                 AngleA[i][2] = (findAngleL(c[1],c[0],c[3]))
@@ -99,7 +104,7 @@ while(True):
             a = a[-1]
             a = a.reshape(1,17,3)
             a = list(a)
-            i = 0
+#             i = 0
         frame_draw = cv.putText(frame_draw, "hand_wave :"+str(score[0][0]*100) + "%", org1, font,  
                    fontScale, color, thickness, cv.LINE_AA)
         frame_draw = cv.putText(frame_draw,"not_hand_wave :"+str(score[0][1]*100)+ "%", org2, font,  
